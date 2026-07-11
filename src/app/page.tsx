@@ -1,433 +1,402 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
-  Terminal,
-  ShoppingCart,
-  ShieldCheck,
-  Cpu,
-  Code,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
+import {
   ArrowUpRight,
-  ArrowRight,
+  ShieldCheck,
   Zap,
   Layers,
-  FolderHeart,
-  Database,
-  HelpCircle,
+  Cpu,
   ChevronDown,
-  Radio,
-  Users2,
-  TrendingUp,
-  Activity,
+  Terminal,
 } from "lucide-react";
 
-export default function Home() {
-  // FAQ Accordion State
+// Mock Data for Recharts Performance Analytics Section
+const chartData = [
+  { name: "Jan", volume: 4000 },
+  { name: "Feb", volume: 5500 },
+  { name: "Mar", volume: 4800 },
+  { name: "Apr", volume: 7000 },
+  { name: "May", volume: 8500 },
+  { name: "Jun", volume: 11000 },
+];
+
+export default function LandingPage() {
+  // FAQ state toggle mapping
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  // 1. Statistics Data
-  const stats = [
-    {
-      icon: <Users2 className="h-5 w-5 text-accent" />,
-      value: "24,500+",
-      label: "Verified Developers",
-    },
-    {
-      icon: <TrendingUp className="h-5 w-5 text-accent" />,
-      value: "$1.2M+",
-      label: "Creator Earnings",
-    },
-    {
-      icon: <Activity className="h-5 w-5 text-accent" />,
-      value: "0.003s",
-      label: "Avg Query Latency",
-    },
-  ];
-
-  // 2. Core Architecture Features
-  const features = [
-    {
-      icon: <ShieldCheck className="h-6 w-6 text-emerald-400" />,
-      title: "Stateless Security",
-      desc: "Every asset and transaction is secured via JWT and strict multi-layer authentication handlers.",
-    },
-    {
-      icon: <Cpu className="h-6 w-6 text-emerald-400" />,
-      title: "Overhead-Free Scaling",
-      desc: "Built with Native MongoDB Driver to bypass Mongoose overheads, ensuring lightning-fast database queries.",
-    },
-    {
-      icon: <Code className="h-6 w-6 text-emerald-400" />,
-      title: "100% Type-Safe Templates",
-      desc: "All source files, hooks, and boilerplates are thoroughly verified with strict TypeScript architecture.",
-    },
-  ];
-
-  // 3. Asset Categories
-  const categories = [
-    {
-      icon: <Layers className="h-5 w-5" />,
-      name: "Next.js Boilerplates",
-      count: "142 items",
-    },
-    {
-      icon: <Database className="h-5 w-5" />,
-      name: "Backend Modules",
-      count: "89 items",
-    },
-    {
-      icon: <FolderHeart className="h-5 w-5" />,
-      name: "Premium UI Kits",
-      count: "210 items",
-    },
-  ];
-
-  // 4. Dummy Marketplace Products
-  const dummyProducts = [
-    {
-      id: 1,
-      title: "Next.js 14 SaaS Boilerplate",
-      price: "$49",
-      category: "Fullstack",
-      lang: "TypeScript",
-    },
-    {
-      id: 2,
-      title: "Native MongoDB Auth Module",
-      price: "$19",
-      category: "Backend",
-      lang: "Node.js",
-    },
-    {
-      id: 3,
-      title: "Shadcn UI Premium Dashboard",
-      price: "$29",
-      category: "Frontend",
-      lang: "React",
-    },
-  ];
-
-  // 5. Technical FAQs
-  const faqs = [
-    {
-      q: "How do I access the source code after purchasing?",
-      a: "Once your transaction is verified through our secure payment gateway, the system automatically provisions instant zip downloads and Git repository access to your dashboard.",
-    },
-    {
-      q: "Are these code structures strictly type-safe?",
-      a: "Yes. Every single asset listed on DevCraft undergoes rigorous manual review and automated linting to guarantee zero TypeScript or build-time compilation errors.",
-    },
-    {
-      q: "What is the marketplace commission rate for sellers?",
-      a: "DevCraft charges a flat 8% platform fee per successful trade. No hidden subscriptions, no upfront listing costs.",
-    },
-  ];
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
 
   return (
-    <div className="font-mono text-xs selection:bg-accent selection:text-primary space-y-20">
-      {/* ==========================================
-          SECTION 1: HERO BANNER (Height: 65vh)
-         ========================================== */}
-      <section className="relative bg-primary text-white h-[65vh] flex items-center overflow-hidden border-b pb-3 border-gray-900">
-        <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 -mb-12 -ml-12 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-zinc-800 selection:text-zinc-100 font-sans space-y-20">
+      {/* SECTION 1: HERO SECTION (Limited to 65% height for visual flow) */}
+      <header className="relative h-[65vh] py-20 flex items-center justify-center   bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-zinc-950">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-25" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center md:text-left">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="space-y-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-medium bg-accent/10 text-accent border border-accent/20 animate-pulse">
-                <Zap className="h-3 w-3" /> Next.js 14 & TypeScript Powered
-              </span>
-              <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-white font-sans">
-                Buy & Sell <br />
-                Premium <span className="text-accent">Dev Assets</span>
-              </h1>
-              <p className="text-gray-400 text-xs max-w-xl leading-relaxed font-sans">
-                The ultimate marketplace for tech professionals. Discover, list,
-                and trade production-ready Next.js components, TypeScript
-                templates, and optimized backend modules.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <Link
-                  href="/explore"
-                  className="inline-flex items-center justify-center gap-2 bg-accent hover:bg-emerald-600 text-primary font-bold px-5 py-3 rounded-global transition-all shadow-lg shadow-accent/20"
-                >
-                  Browse Marketplace <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center gap-2 border border-gray-700 hover:border-gray-500 hover:bg-white/5 text-white px-5 py-3 rounded-global transition-all"
-                >
-                  Start Selling
-                </Link>
-              </div>
-            </div>
-
-            {/* Interactive Code Mockup */}
-            <div className="hidden md:flex justify-center items-center">
-              <div className="p-5 bg-slate-900/60 border border-gray-800/80 rounded-global max-w-md w-full text-emerald-400 space-y-1.5 shadow-2xl backdrop-blur-sm">
-                <div className="flex items-center justify-between pb-3 border-b border-gray-800/60 mb-2">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-red-500/85" />
-                    <div className="w-2 h-2 rounded-full bg-yellow-500/85" />
-                    <div className="w-2 h-2 rounded-full bg-green-500/85" />
-                    <span className="text-gray-500 ml-2 text-[10px]">
-                      marketplace/asset.ts
-                    </span>
-                  </div>
-                  <span className="text-gray-600 text-[9px]">Verified Eco</span>
-                </div>
-                <p className="text-purple-400">
-                  const <span className="text-blue-400">devAsset</span> = &#123;
-                </p>
-                <p className="pl-4 text-gray-300">
-                  title:{" "}
-                  <span className="text-amber-300">"SaaS Boilerplate"</span>,
-                </p>
-                <p className="pl-4 text-gray-300">
-                  database:{" "}
-                  <span className="text-amber-300">"Native MongoDB"</span>,
-                </p>
-                <p className="pl-4 text-gray-300">
-                  isTypeSafe: <span className="text-amber-300">true</span>,
-                </p>
-                <p className="text-purple-400">&#125;;</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================
-          SECTION 2: LIVE STATISTICS HIGH-BAR
-         ========================================== */}
-      <section className="bg-slate-950 border-b border-gray-900 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-            {stats.map((stat, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-center gap-3 py-2 md:border-r last:border-0 border-gray-800"
-              >
-                <div className="p-2 bg-slate-900 rounded">{stat.icon}</div>
-                <div className="text-left">
-                  <p className="text-base font-extrabold text-white">
-                    {stat.value}
-                  </p>
-                  <p className="text-[10px] text-gray-500 uppercase tracking-wider">
-                    {stat.label}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================
-          SECTION 3: CORE FEATURES ARCHITECTURE
-         ========================================== */}
-      <section className="py-20 bg-slate-900 border-b border-gray-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16 space-y-2">
-            <h2 className="text-2xl font-extrabold text-white font-sans">
-              Engineered for High-Performance Devs
-            </h2>
-            <p className="text-gray-400 font-sans">
-              A secured, robust ecosystem designed to trade production-ready
-              source codes.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feat, idx) => (
-              <div
-                key={idx}
-                className="p-6 bg-primary/40 border border-gray-800 rounded-global hover:border-emerald-500/30 transition-all group"
-              >
-                <div className="p-2.5 bg-slate-800 w-fit rounded mb-4 group-hover:bg-emerald-500/10 transition-colors">
-                  {feat.icon}
-                </div>
-                <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-1.5 font-sans">
-                  {feat.title}{" "}
-                  <ArrowUpRight className="h-3.5 w-3.5 text-gray-600 group-hover:text-emerald-400 transition-colors" />
-                </h3>
-                <p className="text-gray-500 font-sans leading-relaxed text-[11px]">
-                  {feat.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================
-          SECTION 4: TOP EXPLORE CATEGORIES
-         ========================================== */}
-      <section className="py-16 bg-primary border-b border-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-10">
-            <h2 className="text-xl font-bold text-white font-sans">
-              Browse by Stack Architecture
-            </h2>
-            <p className="text-gray-500 text-[11px] font-sans">
-              Filter through modules that map to your infrastructure pipeline.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {categories.map((cat, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between p-4 bg-slate-900 border border-gray-800 rounded-global hover:bg-slate-900/80 cursor-pointer group transition-all"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="text-accent">{cat.icon}</div>
-                  <span className="text-white font-semibold text-[11px] font-sans">
-                    {cat.name}
-                  </span>
-                </div>
-                <span className="text-[10px] text-gray-500 bg-slate-950 px-2 py-0.5 rounded border border-gray-800 group-hover:text-accent group-hover:border-accent/30">
-                  {cat.count}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================
-          SECTION 5: TRENDING PREMIUM PRODUCTS
-         ========================================== */}
-      <section className="py-20 bg-slate-900 border-b border-gray-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12">
-            <div>
-              <h2 className="text-2xl font-extrabold text-white font-sans">
-                Trending Repositories
-              </h2>
-              <p className="text-gray-400 font-sans">
-                Hand-picked verified codebase assets ready to push to
-                production.
-              </p>
-            </div>
+        <div className="relative max-w-4xl mx-auto text-center px-4 space-y-6 z-10 animate-fade-in">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-zinc-900 border border-zinc-800 text-zinc-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-pulse" />
+            Next-Gen Digital Architecture Protocol
+          </span>
+          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-none">
+            ENGINEER YOUR <br />
+            <span className="text-zinc-500">DIGITAL LEGACY</span>
+          </h1>
+          <p className="max-w-xl mx-auto text-sm sm:text-base text-zinc-400 font-medium leading-relaxed">
+            Deploy, audit, and trade production-grade codebase modules and
+            software premium assets inside a verified developer-first ecosystem.
+          </p>
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               href="/explore"
-              className="text-accent hover:underline text-[11px] font-semibold mt-2 sm:mt-0"
+              className="group flex items-center gap-2 bg-zinc-50 hover:bg-zinc-200 text-zinc-950 px-6 py-3 rounded-xl font-bold text-sm transition-all shadow-lg"
             >
-              View All Repos &rarr;
+              Explore Production Assets
+              <ArrowUpRight className="h-4 w-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </Link>
+            <Link
+              href="/about"
+              className="bg-zinc-900/80 hover:bg-zinc-900 border border-zinc-800 text-zinc-300 px-6 py-3 rounded-xl font-semibold text-sm transition-all"
+            >
+              Read Architecture Manifesto
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {dummyProducts.map((product) => (
-              <div
-                key={product.id}
-                className="bg-primary/60 border border-gray-800 rounded-global overflow-hidden flex flex-col justify-between hover:border-gray-700 transition-all"
-              >
-                <div className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                      {product.category}
-                    </span>
-                    <span className="text-gray-500 text-[10px]">
-                      {product.lang}
-                    </span>
-                  </div>
-                  <h3 className="text-sm font-bold text-white flex items-start gap-2 font-sans">
-                    <Terminal className="h-4 w-4 text-gray-500 mt-0.5 shrink-0" />
-                    {product.title}
-                  </h3>
-                </div>
-                <div className="p-4 bg-slate-950/60 border-t border-gray-800/80 flex items-center justify-between">
-                  <span className="text-sm font-extrabold text-white">
-                    {product.price}
-                  </span>
-                  <button className="flex items-center gap-1.5 bg-accent hover:bg-emerald-600 text-primary font-bold px-3 py-1.5 rounded text-[10px] transition-colors">
-                    <ShoppingCart className="h-3 w-3" /> Get Asset
-                  </button>
-                </div>
+        </div>
+      </header>
+
+      {/* SECTION 2: PLATFORM STATISTICS (Recharts Analytics) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 border-b border-zinc-900">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-5 space-y-4">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">
+              Ecosystem Metrics
+            </h2>
+            <h3 className="text-3xl font-black text-white tracking-tight">
+              Macro Trading Volume Indice
+            </h3>
+            <p className="text-sm text-zinc-400 leading-relaxed">
+              Real-time visualization of developer interaction metrics and
+              liquidity distribution layers calculated quarterly across escrow
+              contracts.
+            </p>
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="p-4 bg-zinc-900/40 border border-zinc-900 rounded-xl">
+                <span className="block text-2xl font-black text-white">
+                  $2.4M+
+                </span>
+                <span className="text-xs text-zinc-500 font-medium">
+                  Secured Escrow Volume
+                </span>
               </div>
-            ))}
+              <div className="p-4 bg-zinc-900/40 border border-zinc-900 rounded-xl">
+                <span className="block text-2xl font-black text-white">
+                  14.2K
+                </span>
+                <span className="text-xs text-zinc-500 font-medium">
+                  Audited Code Scripts
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 w-full h-[280px] bg-zinc-900/20 border border-zinc-900 rounded-2xl p-4 shadow-inner">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={chartData}
+                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="colorVolume" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#71717a" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#71717a" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="name"
+                  stroke="#52525b"
+                  fontSize={11}
+                  tickLine={false}
+                />
+                <YAxis stroke="#52525b" fontSize={11} tickLine={false} />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#18181b",
+                    borderColor: "#27272a",
+                    color: "#f4f4f5",
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="volume"
+                  stroke="#a1a1aa"
+                  strokeWidth={2.5}
+                  fillOpacity={1}
+                  fill="url(#colorVolume)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </section>
 
-      {/* ==========================================
-          SECTION 6: PLATFORM TECHNICAL FAQs
-         ========================================== */}
-      <section className="py-20 bg-primary border-b border-gray-950">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12 space-y-2">
-            <h2 className="text-2xl font-extrabold text-white font-sans">
-              System Documentation & FAQ
-            </h2>
-            <p className="text-gray-500 font-sans">
-              Everything you need to know about purchasing and uploading
-              modules.
+      {/* SECTION 3: CORE FEATURES GRID */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-b border-zinc-900">
+        <div className="text-center max-w-xl mx-auto mb-16 space-y-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">
+            Platform Features
+          </h2>
+          <p className="text-3xl font-black text-white tracking-tight">
+            Engineered for absolute performance
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-6 bg-zinc-900/30 border border-zinc-900 rounded-2xl space-y-4 hover:border-zinc-800 transition-colors">
+            <div className="p-3 bg-zinc-900 border border-zinc-800 text-white rounded-xl inline-block">
+              <ShieldCheck className="h-5 w-5" />
+            </div>
+            <h4 className="text-lg font-bold text-white">
+              Automated Vulnerability Checks
+            </h4>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Every asset undergoing migration is programmatically
+              cross-examined through systemic static-code analysis to prevent
+              security exposure.
             </p>
           </div>
-          <div className="space-y-3">
-            {faqs.map((faq, index) => (
-              <div
-                key={index}
-                className="border border-gray-800 bg-slate-900 rounded-global overflow-hidden transition-all"
-              >
-                <button
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full text-left p-4 flex items-center justify-between text-white hover:bg-slate-800/50"
-                >
-                  <span className="font-semibold text-[11px] flex items-center gap-2 font-sans">
-                    <HelpCircle className="h-3.5 w-3.5 text-accent" /> {faq.q}
-                  </span>
-                  <ChevronDown
-                    className={`h-4 w-4 text-gray-500 transition-transform ${openFaq === index ? "rotate-180 text-accent" : ""}`}
-                  />
-                </button>
-                {openFaq === index && (
-                  <div className="px-4 pb-4 pt-1 text-gray-400 font-sans leading-relaxed text-[11px] border-t border-gray-800/40 bg-slate-950/40">
-                    {faq.a}
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="p-6 bg-zinc-900/30 border border-zinc-900 rounded-2xl space-y-4 hover:border-zinc-800 transition-colors">
+            <div className="p-3 bg-zinc-900 border border-zinc-800 text-white rounded-xl inline-block">
+              <Zap className="h-5 w-5" />
+            </div>
+            <h4 className="text-lg font-bold text-white">
+              Instant Protocol Deployment
+            </h4>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Skip traditional compliance barriers. Connect decentralized
+              repositories instantly through unified system micro-webhooks
+              seamlessly.
+            </p>
+          </div>
+          <div className="p-6 bg-zinc-900/30 border border-zinc-900 rounded-2xl space-y-4 hover:border-zinc-800 transition-colors">
+            <div className="p-3 bg-zinc-900 border border-zinc-800 text-white rounded-xl inline-block">
+              <Layers className="h-5 w-5" />
+            </div>
+            <h4 className="text-lg font-bold text-white">
+              Multi-Chain Escrow Layer
+            </h4>
+            <p className="text-xs text-zinc-400 leading-relaxed">
+              Safeguard project capital payouts. Funds remain localized inside
+              programmable smart parameters till explicit peer approval criteria
+              match.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ==========================================
-          SECTION 7: NEWSLETTER & PIPELINE CTA
-         ========================================== */}
-      <section className="py-20 bg-slate-950 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[200px] bg-accent/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="max-w-4xl mx-auto px-4 text-center space-y-6 relative z-10">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded bg-slate-900 border border-gray-800 text-[10px] text-gray-400">
-            <Radio className="h-3 w-3 text-accent animate-pulse" />{" "}
-            DEV_STREAM_PIPELINE
+      {/* SECTION 4: TOP CATEGORIES */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-b border-zinc-900">
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-12 gap-4">
+          <div className="space-y-2">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">
+              Ecosystem Categories
+            </h2>
+            <p className="text-3xl font-black text-white tracking-tight">
+              Structured asset indexing
+            </p>
           </div>
-          <h2 className="text-2xl md:text-3xl font-extrabold text-white font-sans tracking-tight">
-            Never Miss Production-Ready Releases
-          </h2>
-          <p className="text-gray-500 max-w-xl mx-auto font-sans leading-relaxed">
-            Subscribe to receive hot-fixes, fresh TypeScript boilerplate alerts,
-            and elite developer toolkits directly in your inbox. No spam. Only
-            source files.
-          </p>
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="max-w-md mx-auto flex items-center gap-2 border border-gray-800 bg-primary/80 p-1.5 rounded-global"
+          <Link
+            href="/explore"
+            className="text-xs font-bold text-zinc-400 hover:text-white transition-colors flex items-center gap-1"
           >
-            <input
-              type="email"
-              placeholder="dev@domain.com"
-              className="bg-transparent text-white px-3 py-2 w-full focus:outline-none placeholder:text-gray-600 text-[11px]"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-accent hover:bg-emerald-600 text-primary font-bold px-4 py-2 rounded text-[11px] transition-colors whitespace-nowrap"
+            View All Indexes <ArrowUpRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              title: "Full-Stack Templates",
+              count: "1,420 Items",
+              desc: "Production boilerplate configs",
+            },
+            {
+              title: "API Microservices",
+              count: "890 Items",
+              desc: "Scalable standalone backends",
+            },
+            {
+              title: "Web3 Smart Contracts",
+              count: "612 Items",
+              desc: "Audited cryptographic code",
+            },
+            {
+              title: "AI/ML Model Pipelines",
+              count: "405 Items",
+              desc: "Data processing engineering logs",
+            },
+          ].map((cat, idx) => (
+            <div
+              key={idx}
+              className="p-5 bg-zinc-900/20 border border-zinc-900 hover:bg-zinc-900/40 transition-all rounded-2xl group cursor-pointer"
             >
-              Connect Webhook
-            </button>
-          </form>
+              <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider block mb-1">
+                {cat.count}
+              </span>
+              <h4 className="text-md font-bold text-white group-hover:text-zinc-300 transition-colors">
+                {cat.title}
+              </h4>
+              <p className="text-xs text-zinc-400 mt-2">{cat.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* SECTION 5: HOW IT WORKS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-b border-zinc-900">
+        <div className="text-center max-w-xl mx-auto mb-16 space-y-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">
+            Operation Pipeline
+          </h2>
+          <p className="text-3xl font-black text-white tracking-tight">
+            Three steps to integration
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+          {[
+            {
+              step: "01",
+              name: "List and Authenticate",
+              text: "Upload repository parameters, dictate price limits, and initiate baseline cryptographic validation checks.",
+            },
+            {
+              step: "02",
+              name: "Escrow Synchronization",
+              text: "Acquiring entity initiates verification process. Capital assets are safely locked in platform escrow layers.",
+            },
+            {
+              step: "03",
+              name: "Systematic Hand-off",
+              text: "Source code assets automatically decouple to target destination, triggering instantaneous payout mechanics.",
+            },
+          ].map((item, idx) => (
+            <div key={idx} className="space-y-3 relative">
+              <span className="text-5xl font-black text-zinc-800 tracking-tighter block">
+                {item.step}
+              </span>
+              <h4 className="text-md font-bold text-white">{item.name}</h4>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                {item.text}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* SECTION 6: PREMIUM TESTIMONIALS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 border-b border-zinc-900">
+        <div className="text-center max-w-xl mx-auto mb-16 space-y-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">
+            Developer Endorsements
+          </h2>
+          <p className="text-3xl font-black text-white tracking-tight">
+            Trusted by leading technical founders
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="p-6 bg-zinc-900/20 border border-zinc-900 rounded-2xl space-y-4">
+            <p className="text-xs text-zinc-300 italic leading-relaxed">
+              "Acquiring modular boilerplate pipelines inside DevCraft radically
+              compressed our engineering timeline by nearly three full sprints.
+              Absolute architectural excellence."
+            </p>
+            <div className="flex items-center gap-3 pt-2">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-xs text-zinc-300">
+                AM
+              </div>
+              <div>
+                <h5 className="text-xs font-bold text-white">Alex Mercer</h5>
+                <span className="text-[10px] text-zinc-500 block">
+                  Lead Architect, QuantTech
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="p-6 bg-zinc-900/20 border border-zinc-900 rounded-2xl space-y-4">
+            <p className="text-xs text-zinc-300 italic leading-relaxed">
+              "The automated contract escrow layer mitigates transactional risk
+              entirely. Selling our optimization engine microservice was
+              remarkably transparent."
+            </p>
+            <div className="flex items-center gap-3 pt-2">
+              <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center font-bold text-xs text-zinc-300">
+                SK
+              </div>
+              <div>
+                <h5 className="text-xs font-bold text-white">Sarah K.</h5>
+                <span className="text-[10px] text-zinc-500 block">
+                  CTO, CoreSaaS Labs
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 7: INTERACTIVE FAQ (Accordion Layout) */}
+      <section className="max-w-3xl mx-auto px-4 py-20">
+        <div className="text-center mb-12 space-y-2">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-zinc-500">
+            Knowledge Base
+          </h2>
+          <p className="text-3xl font-black text-white tracking-tight">
+            Frequently Asked Questions
+          </p>
+        </div>
+        <div className="space-y-4">
+          {[
+            {
+              q: "How are codebases audited prior to platform indexing?",
+              a: "Every listed asset undergoes automated validation pipeline indexing and static code compliance checking immediately upon submission parameter assignment.",
+            },
+            {
+              q: "What parameters dictate escrow fund disbursement metrics?",
+              a: "Capital inputs stay immobilized until purchasing developers run manual localized testing parameters and digitally sign hand-off authorization.",
+            },
+            {
+              q: "Are platform listed assets covered under global IP licensing?",
+              a: "Yes. All asset packages explicitly package legally binding commercial usage authorizations custom-tailored during listing setup schemas.",
+            },
+          ].map((faq, idx) => (
+            <div
+              key={idx}
+              className="border border-zinc-900 bg-zinc-900/10 rounded-xl overflow-hidden"
+            >
+              <button
+                onClick={() => toggleFaq(idx)}
+                className="w-full flex items-center justify-between p-5 text-left font-bold text-sm text-white hover:bg-zinc-900/40 transition-colors"
+              >
+                <span>{faq.q}</span>
+                <ChevronDown
+                  className={`h-4 w-4 text-zinc-500 transition-transform ${openFaq === idx ? "rotate-180" : ""}`}
+                />
+              </button>
+              {openFaq === idx && (
+                <div className="p-5 pt-0 text-xs text-zinc-400 leading-relaxed bg-zinc-900/5 border-t border-zinc-900/60">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </section>
     </div>
