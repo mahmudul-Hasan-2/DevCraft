@@ -129,7 +129,7 @@ export default function Home() {
       {/* ==========================================
           SECTION 1: HERO BANNER (Height: 65vh)
          ========================================== */}
-      <section className="relative bg-primary text-white h-[65vh] flex items-center overflow-hidden border-b border-gray-900">
+      <section className="relative bg-primary text-white h-[65vh] flex items-center overflow-hidden border-b pb-3 border-gray-900">
         <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -mb-12 -ml-12 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
 
