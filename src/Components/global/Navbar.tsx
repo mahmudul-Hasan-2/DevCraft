@@ -12,6 +12,10 @@ import {
   UserPlus,
   LayoutDashboard,
   ChevronDown,
+  PlusCircle,
+  Settings,
+  Info,
+  Mail
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
@@ -19,7 +23,6 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  // Real authentication states using better-auth hooks
   const { data: session, isPending } = authClient.useSession();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -30,7 +33,6 @@ export default function Navbar() {
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const isActive = (path: string) => pathname === path;
 
-  // Handle outside click to collapse avatar dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -60,6 +62,7 @@ export default function Navbar() {
     <nav className="bg-zinc-950 text-white sticky top-0 z-50 shadow-md border-b border-zinc-800 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+          
           {/* 1. Brand Logo */}
           <div className="flex-shrink-0 flex items-center gap-2">
             <Code2 className="h-6 w-6 text-zinc-50" />
@@ -86,7 +89,7 @@ export default function Navbar() {
               Explore Assets
             </Link>
 
-            {/* Render skeletons/empty space gracefully while session data resolves */}
+            {/* Rendered conditionally based on session to hit minimum 5 routes rule */}
             {!isPending &&
               (session ? (
                 <>
@@ -95,6 +98,18 @@ export default function Navbar() {
                     className={`text-sm hover:text-zinc-100 transition-colors ${isActive("/items/add") ? "text-zinc-100 font-semibold" : "text-zinc-400"}`}
                   >
                     Sell Asset
+                  </Link>
+                  <Link
+                    href="/items/manage"
+                    className={`text-sm hover:text-zinc-100 transition-colors ${isActive("/items/manage") ? "text-zinc-100 font-semibold" : "text-zinc-400"}`}
+                  >
+                    Manage Items
+                  </Link>
+                  <Link
+                    href="/about"
+                    className={`text-sm hover:text-zinc-100 transition-colors ${isActive("/about") ? "text-zinc-100 font-semibold" : "text-zinc-400"}`}
+                  >
+                    About
                   </Link>
 
                   {/* Profile Dropdown Component */}
@@ -124,7 +139,15 @@ export default function Navbar() {
 
                     {/* Dropdown Menu Overlay */}
                     {isDropdownOpen && (
-                      <div className="absolute right-0 mt-2 w-48 rounded-lg border border-zinc-800 bg-zinc-900 p-1 shadow-xl shadow-black/50 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="absolute right-0 mt-2 w-48 rounded-lg border border-zinc-800 bg-zinc-900 p-1 shadow-xl shadow-black/50 ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                        <Link
+                          href="/contact"
+                          onClick={() => setIsDropdownOpen(false)}
+                          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-zinc-400 hover:bg-zinc-800 transition-colors text-left"
+                        >
+                          <Mail className="h-4 w-4" /> Contact Support
+                        </Link>
+                        <hr className="border-zinc-800 my-1" />
                         <button
                           onClick={handleLogout}
                           className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 transition-colors text-left"
@@ -136,21 +159,29 @@ export default function Navbar() {
                   </div>
                 </>
               ) : (
-                /* Unauthenticated View: Auth Buttons Only */
-                <div className="flex items-center space-x-3">
+                <>
+                  {/* Minimum 3 routes when logged out (Home, Explore, plus About/Contact static pages) */}
                   <Link
-                    href="/login"
-                    className="flex items-center gap-1.5 text-zinc-400 hover:text-zinc-100 px-3 py-1.5 transition-all text-xs font-medium"
+                    href="/about"
+                    className={`text-sm hover:text-zinc-100 transition-colors ${isActive("/about") ? "text-zinc-100 font-semibold" : "text-zinc-400"}`}
                   >
-                    <LogIn className="h-3.5 w-3.5" /> Sign In
+                    About
                   </Link>
-                  <Link
-                    href="/register"
-                    className="flex items-center gap-1.5 bg-zinc-50 hover:bg-zinc-200 text-zinc-950 font-semibold px-4 py-1.5 rounded-lg transition-all text-xs shadow-sm"
-                  >
-                    <UserPlus className="h-3.5 w-3.5" /> Register
-                  </Link>
-                </div>
+                  <div className="flex items-center space-x-3 pl-2">
+                    <Link
+                      href="/login"
+                      className="flex items-center gap-1.5 text-zinc-400 hover:text-zinc-100 px-3 py-1.5 transition-all text-xs font-medium"
+                    >
+                      <LogIn className="h-3.5 w-3.5" /> Sign In
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="flex items-center gap-1.5 bg-zinc-50 hover:bg-zinc-200 text-zinc-950 font-semibold px-4 py-1.5 rounded-lg transition-all text-xs shadow-sm"
+                    >
+                      <UserPlus className="h-3.5 w-3.5" /> Register
+                    </Link>
+                  </div>
+                </>
               ))}
           </div>
 
@@ -198,6 +229,27 @@ export default function Navbar() {
                 >
                   Sell Asset
                 </Link>
+                <Link
+                  href="/items/manage"
+                  onClick={toggleMenu}
+                  className={`block px-3 py-2 rounded-lg text-sm ${isActive("/items/manage") ? "bg-zinc-900 text-zinc-100 font-bold" : "text-zinc-400 hover:bg-zinc-900"}`}
+                >
+                  Manage Items
+                </Link>
+                <Link
+                  href="/about"
+                  onClick={toggleMenu}
+                  className={`block px-3 py-2 rounded-lg text-sm ${isActive("/about") ? "bg-zinc-900 text-zinc-100 font-bold" : "text-zinc-400 hover:bg-zinc-900"}`}
+                >
+                  About
+                </Link>
+                <Link
+                  href="/contact"
+                  onClick={toggleMenu}
+                  className={`block px-3 py-2 rounded-lg text-sm ${isActive("/contact") ? "bg-zinc-900 text-zinc-100 font-bold" : "text-zinc-400 hover:bg-zinc-900"}`}
+                >
+                  Contact Support
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="w-full text-left flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
@@ -207,6 +259,13 @@ export default function Navbar() {
               </>
             ) : (
               <div className="pt-2 flex flex-col space-y-2 border-t border-zinc-800">
+                <Link
+                  href="/about"
+                  onClick={toggleMenu}
+                  className="block text-left text-zinc-400 hover:text-zinc-100 px-3 py-2 text-sm"
+                >
+                  About
+                </Link>
                 <Link
                   href="/login"
                   onClick={toggleMenu}
