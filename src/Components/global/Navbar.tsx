@@ -10,12 +10,8 @@ import {
   LogIn,
   LogOut,
   UserPlus,
-  LayoutDashboard,
   ChevronDown,
-  PlusCircle,
-  Settings,
-  Info,
-  Mail
+  Mail,
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
@@ -62,7 +58,6 @@ export default function Navbar() {
     <nav className="bg-zinc-950 text-white sticky top-0 z-50 shadow-md border-b border-zinc-800 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          
           {/* 1. Brand Logo */}
           <div className="flex-shrink-0 flex items-center gap-2">
             <Code2 className="h-6 w-6 text-zinc-50" />
@@ -82,22 +77,23 @@ export default function Navbar() {
             >
               Home
             </Link>
+
             <Link
-              href="/explore"
-              className={`text-sm hover:text-zinc-100 transition-colors ${isActive("/explore") ? "text-zinc-100 font-semibold" : "text-zinc-400"}`}
+              href="/items"
+              className={`text-sm hover:text-zinc-100 transition-colors ${isActive("/items") ? "text-zinc-100 font-semibold" : "text-zinc-400"}`}
             >
-              Explore Assets
+              Items
             </Link>
 
-            {/* Rendered conditionally based on session to hit minimum 5 routes rule */}
             {!isPending &&
               (session ? (
                 <>
+                  {/* Changed "Sell Asset" to "Sell Item" */}
                   <Link
                     href="/items/add"
                     className={`text-sm hover:text-zinc-100 transition-colors ${isActive("/items/add") ? "text-zinc-100 font-semibold" : "text-zinc-400"}`}
                   >
-                    Sell Asset
+                    Sell Item
                   </Link>
                   <Link
                     href="/items/manage"
@@ -112,7 +108,7 @@ export default function Navbar() {
                     About
                   </Link>
 
-                  {/* Profile Dropdown Component */}
+                  {/* Profile Dropdown */}
                   <div className="relative" ref={dropdownRef}>
                     <button
                       onClick={toggleDropdown}
@@ -160,7 +156,6 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  {/* Minimum 3 routes when logged out (Home, Explore, plus About/Contact static pages) */}
                   <Link
                     href="/about"
                     className={`text-sm hover:text-zinc-100 transition-colors ${isActive("/about") ? "text-zinc-100 font-semibold" : "text-zinc-400"}`}
@@ -211,23 +206,25 @@ export default function Navbar() {
           >
             Home
           </Link>
+
           <Link
-            href="/explore"
+            href="/items"
             onClick={toggleMenu}
-            className={`block px-3 py-2 rounded-lg text-sm ${isActive("/explore") ? "bg-zinc-900 text-zinc-100 font-bold" : "text-zinc-400 hover:bg-zinc-900"}`}
+            className={`block px-3 py-2 rounded-lg text-sm ${isActive("/items") ? "bg-zinc-900 text-zinc-100 font-bold" : "text-zinc-400 hover:bg-zinc-900"}`}
           >
-            Explore Assets
+            Items
           </Link>
 
           {!isPending &&
             (session ? (
               <>
+                {/* Changed "Sell Asset" to "Sell Item" in mobile too */}
                 <Link
                   href="/items/add"
                   onClick={toggleMenu}
                   className={`block px-3 py-2 rounded-lg text-sm ${isActive("/items/add") ? "bg-zinc-900 text-zinc-100 font-bold" : "text-zinc-400 hover:bg-zinc-900"}`}
                 >
-                  Sell Asset
+                  Sell Item
                 </Link>
                 <Link
                   href="/items/manage"

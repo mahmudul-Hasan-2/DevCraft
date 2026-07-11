@@ -2,8 +2,11 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 
 const SellAssetPage = () => {
+  const { data } = authClient.useSession();
+
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +50,7 @@ const SellAssetPage = () => {
     }
 
     try {
-      const response = await fetch("/api/assets", {
+      const response = await fetch("/api/items", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,6 +58,7 @@ const SellAssetPage = () => {
         body: JSON.stringify({
           ...formData,
           price: Number(formData.price), // স্ট্রিং প্রাইসকে নাম্বারে কনভার্ট
+          userId: data?.user?.id,
         }),
       });
 
@@ -73,7 +77,7 @@ const SellAssetPage = () => {
         });
         // ৩ সেকেন্ড পর ইউজারকে এক্সপ্লোর পেজে রিডাইরেক্ট করা
         setTimeout(() => {
-          router.push("/explore");
+          router.push("/items");
           router.refresh();
         }, 2000);
       } else {

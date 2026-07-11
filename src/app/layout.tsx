@@ -3,6 +3,7 @@ import { Fira_Code, Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/Components/global/Navbar";
 import Footer from "@/Components/global/Footer";
+import { Toaster } from "sonner";
 
 const FiraCode = Fira_Code({
   subsets: ["latin"],
@@ -28,6 +29,7 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-grow py-20">{children}</main>
         <Footer></Footer>
+        <Toaster></Toaster>
       </body>
     </html>
   );

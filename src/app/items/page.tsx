@@ -4,6 +4,9 @@ import AssetCard, { Asset } from "@/Components/AssetCard";
 import FilterPanel from "@/Components/FilterPanel";
 import clientPromise from "@/lib/mongodb";
 
+// ডাটা যেন ক্যাশ না হয়ে প্রতি রিকোয়েস্টে ডাটাবেজ থেকে আসে
+export const dynamic = "force-dynamic";
+
 interface SearchParams {
   search?: string;
   category?: string;
@@ -30,6 +33,7 @@ async function fetchFilteredAssets(params: SearchParams): Promise<Asset[]> {
       query.category = params.category;
     }
 
+    // 💡 ফিক্স: "items"-এর বদলে "assets" কালেকশন ব্যবহার করা হয়েছে
     const data = await db.collection("assets").find(query).toArray();
 
     // সার্ভার কম্পোনেন্ট থেকে ক্লায়েন্ট সেফ করার জন্য _id স্ট্রিং-এ কনভার্ট
@@ -40,6 +44,7 @@ async function fetchFilteredAssets(params: SearchParams): Promise<Asset[]> {
       fullDescription: item.fullDescription || "",
       price: Number(item.price) || 0,
       imageUrl: item.imageUrl || "",
+      category: item.category || "Uncategorized", // সেফটি চেক
     })) as Asset[];
   } catch (error) {
     console.error("Database connection failed in server component:", error);
