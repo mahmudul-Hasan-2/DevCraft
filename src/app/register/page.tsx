@@ -38,7 +38,6 @@ export default function RegisterPage() {
         password: trimmedPassword,
         name: trimmedName,
         image: imageUrl.trim() || undefined, // Sends image URL to better-auth if provided
-        role: "user",
         callbackURL: "/",
       });
 
