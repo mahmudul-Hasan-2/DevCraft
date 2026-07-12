@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import clientPromise from "@/lib/mongodb";
-import { Asset } from "@/components/AssetCard";
+import { Asset } from "@/Components/AssetCard";
 
 interface PageProps {
   params: Promise<{ id: string }>;
