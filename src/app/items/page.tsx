@@ -3,6 +3,7 @@ import { Filter, Document } from "mongodb";
 import AssetCard, { Asset } from "@/Components/AssetCard";
 import FilterPanel from "@/Components/FilterPanel";
 import clientPromise from "@/lib/mongodb";
+import Link from "next/link"; // পেজিনেশন লিংকের জন্য
 
 // ডাটা যেন ক্যাশ না হয়ে প্রতি রিকোয়েস্টে সরাসরি ডাটাবেজ থেকে আসে
 export const dynamic = "force-dynamic";
@@ -11,22 +12,35 @@ interface SearchParams {
   search?: string;
   category?: string;
   sortBy?: string;
+  page?: string; // নতুন পেজ প্যারামিটার যোগ করা হলো
 }
 
 interface PageProps {
   searchParams: Promise<SearchParams>;
 }
 
-// সার্ভার-সাইড ডাটা ফেচিং, ফিল্টারিং এবং সর্টিং ফাংশন
-async function fetchFilteredAssets(params: SearchParams): Promise<Asset[]> {
+// আমরা রিটার্ন টাইপে assets-এর সাথে totalPages-ও ফিরিয়ে দেবো
+interface FetchResult {
+  assets: Asset[];
+  totalPages: number;
+  currentPage: number;
+}
+
+const ITEMS_PER_PAGE = 8; // প্রতি পেজে ৮টি করে আইটেম দেখাবো
+
+// সার্ভার-সাইড ডাটা ফেচিং, ফিল্টারিং, সর্টিং এবং পেজিনেশন ফাংশন
+async function fetchFilteredAssets(params: SearchParams): Promise<FetchResult> {
   try {
     const client = await clientPromise;
     const db = client.db();
 
+    const currentPage = parseInt(params.page || "1", 10) || 1;
+    const skipAmount = (currentPage - 1) * ITEMS_PER_PAGE;
+
     // টাইপ-সেফ মঙ্গোডিবি ফিল্টার অবজেক্ট
     const query: Filter<Document> = {};
 
-    // ১. টেক্সট সার্চ লজিক (Title, Short, অথবা Full Description-এর ভেতর কেস-ইনসেন্সিটিভ খুঁজবে)
+    // ১. টেক্সট সার্চ লজিক
     if (params.search && params.search.trim() !== "") {
       query.$or = [
         { title: { $regex: params.search.trim(), $options: "i" } },
@@ -43,24 +57,30 @@ async function fetchFilteredAssets(params: SearchParams): Promise<Asset[]> {
     // ৩. ডাইনামিক সর্টিং লজিক
     let sortOptions: any = {};
     if (params.sortBy === "price_asc") {
-      sortOptions = { price: 1 }; // কম থেকে বেশি দাম
+      sortOptions = { price: 1 };
     } else if (params.sortBy === "price_desc") {
-      sortOptions = { price: -1 }; // বেশি থেকে কম দাম
+      sortOptions = { price: -1 };
     } else if (params.sortBy === "date_asc") {
-      sortOptions = { createdAt: 1 }; // পুরানো প্রোডাক্ট আগে
+      sortOptions = { createdAt: 1 };
     } else {
-      sortOptions = { createdAt: -1 }; // ডিফল্ট: নতুন প্রোডাক্ট আগে দেখাবে
+      sortOptions = { createdAt: -1 }; // ডিফল্ট
     }
 
-    // ডাটাবেজ থেকে ডাটা তুলে আনা হচ্ছে
+    // ফিল্টার অনুযায়ী টোটাল কয়টা আইটেম আছে তা গণনা করা হচ্ছে
+    const totalItems = await db.collection("assets").countDocuments(query);
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    // ডাটাবেজ থেকে skip ও limit মিলিয়ে ডাটা তুলে আনা হচ্ছে
     const data = await db
       .collection("assets")
       .find(query)
       .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(ITEMS_PER_PAGE)
       .toArray();
 
-    // সার্ভার কম্পোনেন্ট থেকে ক্লায়েন্ট সেফ করার জন্য ডাটা ম্যাপ ও আইডি কনভার্ট করা
-    return data.map((item) => ({
+    // ডাটা ম্যাপ ও আইডি কনভার্ট করা
+    const assets = data.map((item) => ({
       _id: item._id.toString(),
       title: item.title || "Untitled Asset",
       shortDescription: item.shortDescription || "",
@@ -70,15 +90,29 @@ async function fetchFilteredAssets(params: SearchParams): Promise<Asset[]> {
       imageUrl: item.imageUrl || "https://via.placeholder.com/150",
       category: item.category || "Uncategorized",
     })) as Asset[];
+
+    return { assets, totalPages, currentPage };
   } catch (error) {
     console.error("Database connection failed in server component:", error);
-    return [];
+    return { assets: [], totalPages: 1, currentPage: 1 };
   }
 }
 
 const ExploreAssets = async ({ searchParams }: PageProps) => {
   const resolvedParams = await searchParams;
-  const assets = await fetchFilteredAssets(resolvedParams);
+  const { assets, totalPages, currentPage } =
+    await fetchFilteredAssets(resolvedParams);
+
+  // ইউআরএল কোয়েরি জেনারেট করার হেল্পার ফাংশন (যাতে ফিল্টার নষ্ট না হয়)
+  const createPageLink = (pageNumber: number) => {
+    const params = new URLSearchParams();
+    if (resolvedParams.search) params.set("search", resolvedParams.search);
+    if (resolvedParams.category)
+      params.set("category", resolvedParams.category);
+    if (resolvedParams.sortBy) params.set("sortBy", resolvedParams.sortBy);
+    params.set("page", pageNumber.toString());
+    return `?${params.toString()}`;
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 font-sans">
@@ -98,11 +132,60 @@ const ExploreAssets = async ({ searchParams }: PageProps) => {
 
       {/* Responsive Core Grid Architecture */}
       {assets.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in duration-300">
-          {assets.map((asset) => (
-            <AssetCard key={asset._id} asset={asset} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 animate-in fade-in duration-300">
+            {assets.map((asset) => (
+              <AssetCard key={asset._id} asset={asset} />
+            ))}
+          </div>
+
+          {/* 🎯 মডার্ন ডার্ক-থিমড পেজিনেশন বার */}
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center space-x-2 mt-12 bg-slate-900/40 p-4 rounded-xl border border-slate-800/60 max-w-md mx-auto">
+              {/* Previous বাটন */}
+              <Link
+                href={createPageLink(currentPage - 1)}
+                className={`px-3 py-1.5 text-sm font-medium rounded-lg border transition ${
+                  currentPage === 1
+                    ? "pointer-events-none opacity-40 border-slate-800 bg-slate-900 text-slate-500"
+                    : "border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white"
+                }`}
+              >
+                Previous
+              </Link>
+
+              {/* পেজ নম্বর সমূহ */}
+              {Array.from({ length: totalPages }, (_, index) => {
+                const pageNumber = index + 1;
+                return (
+                  <Link
+                    key={pageNumber}
+                    href={createPageLink(pageNumber)}
+                    className={`px-3 py-1.5 text-sm font-semibold rounded-lg border transition ${
+                      currentPage === pageNumber
+                        ? "bg-white text-slate-950 border-white shadow-lg"
+                        : "border-slate-800 bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-white"
+                    }`}
+                  >
+                    {pageNumber}
+                  </Link>
+                );
+              })}
+
+              {/* Next বাটন */}
+              <Link
+                href={createPageLink(currentPage + 1)}
+                className={`px-3 py-1.5 text-sm font-medium rounded-lg border transition ${
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-40 border-slate-800 bg-slate-900 text-slate-500"
+                    : "border-slate-800 bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white"
+                }`}
+              >
+                Next
+              </Link>
+            </div>
+          )}
+        </>
       ) : (
         /* Standard Redesigned Empty State Message */
         <div className="text-center py-24 bg-slate-900/20 rounded-2xl border border-dashed border-slate-800 shadow-inner max-w-2xl mx-auto mt-8 animate-in fade-in duration-200">
