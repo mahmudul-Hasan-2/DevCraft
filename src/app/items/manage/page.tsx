@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Package, Loader2, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import DeleteOwnAsset from "@/components/DeleteOwnAsset";
-import EditOwnAsset from "@/components/EditOwnAsset"; // এডিট কম্পোনেন্ট ইমপোর্ট
+import DeleteOwnAsset from "@/Components/DeleteOwnAsset";
+import EditOwnAsset from "@/Components/EditOwnAsset"; // এডিট কম্পোনেন্ট ইমপোর্ট
 
 interface Item {
   id: string;
