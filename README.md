@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# 🛠️ DevCraft Items Management
 
-First, run the development server:
+**A Premium & Seamless Full-Stack Item Discovery and Management Platform**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+[**Live Demo**](https://dev-craft-lime.vercel.app) • [**Report Bug**](https://github.com/mahmudul-Hasan-2/DevCraft/issues)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![Better Auth](https://img.shields.io/badge/Better_Auth-FF5733?style=for-the-badge&logo=auth0&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+</div>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📸 Overview
 
-To learn more about Next.js, take a look at the following resources:
+**DevCraft** is a cutting-edge web application engineered for developer tools, item management, and seamless organization. Powered by the Next.js App Router and secured with Better-Auth, it bridges the gap between high-performance data operations and a stunning user experience. Whether you are adding new developer resources or exploring curated assets, DevCraft handles it elegantly.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ Key Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **🔐 Bulletproof Authentication:** Implemented secure user login, registration, and session persistence powered by **Better-Auth**, utilizing strict environment variable mappings.
+- **⚡ Dynamic Item Discovery:** Users can browse, search, and filter premium tools and resources through a high-performance `/explore` interface.
+- **🏗️ Robust CRUD Operations:** Authorized users can effortlessly Create, Read, Update, and Delete items with instant client-side UI synchronization.
+- **🛡️ Multi-Environment Stability:** Architected with dynamic baseURL routing (`window.location.origin` / env variables) to guarantee seamless switching between `localhost:3000` and Vercel production.
+- **🎨 Modern UX:** Clean layouts built with utility-first responsive grids and optimized loading states for smooth data transitions.
 
-## Deploy on Vercel
+## 🛠 Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Framework:** Next.js (App Router with Server & Client Component separation)
+- **Authentication:** Better Auth (React Integration)
+- **Styling & UI:** Tailwind CSS
+- **Database Layer:** MongoDB (via Mongoose / Native Driver)
+- **Deployment & Hosting:** Vercel Production Platform
