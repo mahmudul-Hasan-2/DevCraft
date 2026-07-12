@@ -87,12 +87,6 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 ---
 
-## 📄 License
-
-Distributed under the **MIT License**. See `LICENSE` for more information.
-
----
-
 <div align="center">
   <p>💡 Built with ❤️ by <b>Mahmudul Hasan</b> — Happy Coding! 🚀</p>
 </div>
