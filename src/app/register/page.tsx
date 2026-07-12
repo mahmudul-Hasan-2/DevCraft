@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link"; // 💡 নতুন লিংক কম্পোনেন্ট ইমপোর্ট করা হলো
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -37,13 +38,14 @@ export default function RegisterPage() {
         password: trimmedPassword,
         name: trimmedName,
         image: imageUrl.trim() || undefined, // Sends image URL to better-auth if provided
-        callbackURL: "/dashboard",
+        role: "user",
+        callbackURL: "/",
       });
 
       if (authError) {
         setError(authError.message || "Failed to create an account.");
       } else {
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -229,6 +231,17 @@ export default function RegisterPage() {
             >
               {loading ? "Creating account..." : "Register"}
             </button>
+          </div>
+
+          {/* 💡 NEW: Already have an account? Sign in Section */}
+          <div className="text-center text-sm text-zinc-400 mt-4">
+            Already have an account?{" "}
+            <Link
+              href="/login" // তোমার প্রজেক্টের লগইন পাথের নাম যদি আলাদা হয় তবে এখানে চেঞ্জ করে নিও মামা
+              className="font-medium text-zinc-200 hover:text-white underline underline-offset-4 transition-colors"
+            >
+              Sign in
+            </Link>
           </div>
         </form>
       </div>

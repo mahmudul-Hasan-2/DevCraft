@@ -29,7 +29,7 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-grow py-20">{children}</main>
         <Footer></Footer>
-        <Toaster></Toaster>
+        <Toaster theme="dark" closeButton></Toaster>
       </body>
     </html>
   );

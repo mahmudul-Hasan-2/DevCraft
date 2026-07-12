@@ -50,7 +50,7 @@ const AssetCard: React.FC<AssetCardProps> = ({ asset }) => {
             </span>
           </div>
 
-          <Link href={`/explore/${asset._id}`}>
+          <Link href={`/items/${asset._id}`}>
             <button className="w-full mt-4 bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white font-semibold py-2.5 px-4 rounded-xl transition-all duration-200 text-sm border border-slate-700/60 hover:border-blue-500 shadow-md active:scale-[0.98]">
               View Details
             </button>

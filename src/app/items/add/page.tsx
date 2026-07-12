@@ -6,12 +6,13 @@ import { authClient } from "@/lib/auth-client";
 
 const SellAssetPage = () => {
   const { data } = authClient.useSession();
-
   const router = useRouter();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
+  // সব ডাটা এখন এই একক formData স্টেট থেকেই ম্যানেজ হবে
   const [formData, setFormData] = useState({
     title: "",
     shortDescription: "",
@@ -36,7 +37,7 @@ const SellAssetPage = () => {
     setError(null);
     setSuccess(false);
 
-    // বেসিক ফ্রন্টএন্ড ভ্যালিডেশন
+    // ফ্রন্টএন্ড ভ্যালিডেশন (formData.category এখন পারফেক্টলি ভ্যালু পাবে)
     if (
       !formData.title ||
       !formData.shortDescription ||
@@ -59,6 +60,7 @@ const SellAssetPage = () => {
           ...formData,
           price: Number(formData.price), // স্ট্রিং প্রাইসকে নাম্বারে কনভার্ট
           userId: data?.user?.id,
+          createdAt: new Date().toISOString(), // FIXED: টাইপো ফিক্স করে সঠিক 'createdAt' দেওয়া হলো
         }),
       });
 
@@ -66,6 +68,7 @@ const SellAssetPage = () => {
 
       if (result.success) {
         setSuccess(true);
+
         // ফর্ম রিসেট করা
         setFormData({
           title: "",
@@ -75,7 +78,8 @@ const SellAssetPage = () => {
           category: "",
           imageUrl: "",
         });
-        // ৩ সেকেন্ড পর ইউজারকে এক্সপ্লোর পেজে রিডাইরেক্ট করা
+
+        // ২ সেকেন্ড পর ইউজারকে এক্সপ্লোর পেজে রিডাইরেক্ট করা
         setTimeout(() => {
           router.push("/items");
           router.refresh();
@@ -92,7 +96,7 @@ const SellAssetPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-950 text-slate-100 max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8 font-sans">
       {/* Page Heading */}
       <div className="mb-10 text-center md:text-left">
         <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 tracking-tight">
@@ -109,12 +113,12 @@ const SellAssetPage = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Success & Error Alert Banners */}
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm font-medium">
+            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-sm font-medium animate-in fade-in duration-200">
               {error}
             </div>
           )}
           {success && (
-            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-4 rounded-xl text-sm font-medium">
+            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 p-4 rounded-xl text-sm font-medium animate-in fade-in duration-200">
               Asset listed successfully! Redirecting to Explore page...
             </div>
           )}
@@ -156,26 +160,26 @@ const SellAssetPage = () => {
 
             {/* Category */}
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+              <label className="block text-xs font-semibold text-slate-400 mb-2 uppercase tracking-wider">
                 Category *
               </label>
               <select
                 name="category"
-                value={formData.category}
-                onChange={handleChange}
+                value={formData.category} // সরাসরি formData থেকে ভ্যালু রিড করছে
+                onChange={handleChange} // গ্লোবাল handleChange দিয়ে ডিরেক্ট স্টেট আপডেট হচ্ছে
                 className="w-full px-4 py-3 bg-slate-900/60 border border-slate-700/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-sm text-slate-300 bg-none transition-all cursor-pointer"
                 required
               >
-                <option value="" className="bg-slate-900">
+                <option value="" className="bg-zinc-900">
                   Select Category
                 </option>
-                <option value="electronics" className="bg-slate-900">
+                <option value="electronics" className="bg-zinc-900">
                   Electronics
                 </option>
-                <option value="realestate" className="bg-slate-900">
+                <option value="realestate" className="bg-zinc-900">
                   Real Estate
                 </option>
-                <option value="vehicles" className="bg-slate-900">
+                <option value="vehicles" className="bg-zinc-900">
                   Vehicles
                 </option>
               </select>

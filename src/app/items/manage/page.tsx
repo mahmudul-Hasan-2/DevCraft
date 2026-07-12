@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Package, Loader2, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import DeleteOwnAsset from "@/Components/DeleteOwnAsset"; // নিশ্চিত করো পাথ ঠিক আছে
+import DeleteOwnAsset from "@/components/DeleteOwnAsset";
+import EditOwnAsset from "@/components/EditOwnAsset"; // এডিট কম্পোনেন্ট ইমপোর্ট
 
 interface Item {
   id: string;
@@ -22,14 +23,14 @@ export default function ManageItemsPage() {
   const [items, setItems] = useState<Item[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // 1. প্রোটেক্টেড রুট চেক
+  // ১. প্রোটেক্টেড রুট চেক
   useEffect(() => {
     if (!isAuthPending && !session) {
       router.push("/login");
     }
   }, [session, isAuthPending, router]);
 
-  // 2. ইউজারের নিজস্ব আইটেমগুলো ফেচ করা
+  // ২. ইউজারের নিজস্ব আইটেমগুলো ফেচ করা
   useEffect(() => {
     if (!session) return;
 
@@ -50,9 +51,18 @@ export default function ManageItemsPage() {
     fetchMyItems();
   }, [session]);
 
-  // 3. ডিলিট সাকসেস হ্যান্ডলার (শুধু স্টেট ফিল্টার করবে)
+  // ৩. ডিলিট সাকসেস হ্যান্ডলার (স্টেট ফিল্টার)
   const handleRemoveFromState = (itemId: string) => {
     setItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+  };
+
+  // ৪. এডিট সাকসেস হ্যান্ডলার (স্টেট ম্যাপ/আপডেট)
+  const handleUpdateInState = (updatedItem: Item) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === updatedItem.id ? updatedItem : item,
+      ),
+    );
   };
 
   // Loading State
@@ -88,7 +98,7 @@ export default function ManageItemsPage() {
           </Link>
         </div>
 
-        {/* আইটেম লিস্ট / টেবিল */}
+        {/* আইটেম লিস্ট / টেবিল কন্টেইনার */}
         {items.length === 0 ? (
           <div className="text-center py-16 border border-dashed border-zinc-800 rounded-xl bg-zinc-900/30">
             <Package className="h-12 w-12 text-zinc-600 mx-auto mb-4" />
@@ -144,12 +154,16 @@ export default function ManageItemsPage() {
                           })
                         : "N/A"}
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      {/* FIXED: প্রপ্স পাসিং এবং হ্যান্ডলার লজিক সোজা করা হলো */}
+                    <td className="px-6 py-4 text-right flex items-center justify-end gap-1">
+                      {/* এডিট বাটন উইজেট */}
+                      <EditOwnAsset
+                        item={item}
+                      />
+
+                      {/* ডিলিট বাটন উইজেট */}
                       <DeleteOwnAsset
                         itemId={item.id}
                         itemName={item.name || "Untitled Item"}
-                        onDeleteSuccess={handleRemoveFromState}
                       />
                     </td>
                   </tr>

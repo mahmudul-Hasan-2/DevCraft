@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
@@ -10,15 +11,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  const handleLogin = async (
-    e: React.FormEvent<HTMLFormElement>,
-  ): Promise<void> => {
-    e.preventDefault();
+  // কমন লগইন লজিক যা নরমাল এবং ডেমো দুইটার জন্যই কাজ করবে
+  const executeLogin = async (loginEmail: string, loginPassword: string) => {
     setLoading(true);
     setError("");
 
-    // পাসওয়ার্ডের শুরুতে বা শেষে স্পেস থাকলে তা ট্রিম করে ভ্যালিডেশন চেক
-    const trimmedPassword = password.trim();
+    const trimmedPassword = loginPassword.trim();
     if (!trimmedPassword) {
       setError("Password cannot be empty or just spaces.");
       setLoading(false);
@@ -27,9 +25,9 @@ export default function LoginPage() {
 
     try {
       const { error: authError } = await authClient.signIn.email({
-        email,
+        email: loginEmail.trim(),
         password: trimmedPassword,
-        callbackURL: "/dashboard",
+        callbackURL: "/",
       });
 
       if (authError) {
@@ -42,7 +40,26 @@ export default function LoginPage() {
     }
   };
 
-  // ইনপুট ফিল্ডে স্পেস চাপলে সেটা যেন টাইপই না হয় (প্রিভেন্ট করা)
+  // ফর্ম সাবমিট হ্যান্ডলার (নরমাল ইউজার)
+  const handleLogin = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
+    e.preventDefault();
+    await executeLogin(email, password);
+  };
+
+  // 🎯 ডেমো অটো-ফিল এবং ইনস্ট্যান্ট লগইন ফাংশন
+  const handleDemoLogin = async () => {
+    const demoEmail = "demo@example.com"; // অ্যাসাইনমেন্ট গাইডের ডেমো ইমেইল
+    const demoPassword = "password123"; // অ্যাসাইনমেন্ট গাইডের ডেমো পাসওয়ার্ড
+
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+
+    // ফিল করার সাথে সাথেই লগইন প্রসেস রান করে দেবে
+    await executeLogin(demoEmail, demoPassword);
+  };
+
   const handlePasswordKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === " ") {
       e.preventDefault();
@@ -62,6 +79,21 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* 💡 Highlighted Demo Login CTA for Teachers */}
+        <div className="rounded-xl border border-zinc-700/60 bg-zinc-850 p-4 text-center space-y-2">
+          <p className="text-xs text-zinc-400 font-medium">
+            Testing or grading this project? Use the one-click demo login:
+          </p>
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            disabled={loading}
+            className="inline-flex items-center justify-center w-full rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-sm font-medium text-zinc-200 shadow-sm transition-all hover:bg-zinc-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-zinc-500 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            ⚡ Quick Demo Login
+          </button>
+        </div>
+
         {/* Error Alert */}
         {error && (
           <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400">
@@ -70,7 +102,7 @@ export default function LoginPage() {
         )}
 
         {/* Form */}
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+        <form className="mt-6 space-y-6" onSubmit={handleLogin}>
           <div className="space-y-4 rounded-md">
             {/* Email Field */}
             <div>
@@ -114,7 +146,7 @@ export default function LoginPage() {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setPassword(e.target.value)
                   }
-                  onKeyDown={handlePasswordKeyDown} // স্পেস বাটন ব্লক করার জন্য
+                  onKeyDown={handlePasswordKeyDown}
                   className="block w-full rounded-lg border border-zinc-700 bg-zinc-950 pl-3 pr-10 py-2.5 text-zinc-100 placeholder-zinc-500 shadow-sm focus:border-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-500 sm:text-sm"
                   placeholder="••••••••"
                 />
@@ -123,10 +155,9 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-400 hover:text-zinc-200"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-zinc-600"
                 >
                   {showPassword ? (
-                    // Eye Off Icon
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -142,7 +173,6 @@ export default function LoginPage() {
                       />
                     </svg>
                   ) : (
-                    // Eye On Icon
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -177,6 +207,17 @@ export default function LoginPage() {
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
+          </div>
+
+          {/* Register / Sign up Redirect Section */}
+          <div className="text-center text-sm text-zinc-400 mt-4">
+            Don't have an account?{" "}
+            <Link
+              href="/register"
+              className="font-medium text-zinc-200 hover:text-white underline underline-offset-4 transition-colors"
+            >
+              Sign up
+            </Link>
           </div>
         </form>
       </div>
