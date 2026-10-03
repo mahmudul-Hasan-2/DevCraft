@@ -25,9 +25,9 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-950 text-white py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto space-y-8 animate-in fade-in duration-300">
-        
+
         {/* Header */}
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-full text-xs font-semibold uppercase tracking-wider">

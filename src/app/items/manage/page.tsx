@@ -11,8 +11,12 @@ import EditOwnAsset from "@/Components/EditOwnAsset"; // এডিট কম্�
 interface Item {
   id: string;
   name: string;
+  title?: string;
   price: number;
   category: string;
+  shortDescription: string;
+  fullDescription: string;
+  imageUrl: string;
   createdAt: string;
 }
 
@@ -68,7 +72,7 @@ export default function ManageItemsPage() {
   // Loading State
   if (isAuthPending || (isLoading && session)) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-zinc-950 text-white">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-slate-950 text-white">
         <Loader2 className="h-8 w-8 animate-spin text-zinc-400 mb-2" />
         <p className="text-zinc-400 text-sm">Loading your inventory...</p>
       </div>
@@ -77,8 +81,10 @@ export default function ManageItemsPage() {
 
   if (!session) return null;
 
+  console.log("Fetched Items:", items); // ডিবাগিং এর জন্য লগ
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-white py-12 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-slate-950 text-white py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-5xl mx-auto">
         {/* হেডার সেকশন */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-zinc-800 pb-6 mb-8 gap-4">
@@ -156,9 +162,7 @@ export default function ManageItemsPage() {
                     </td>
                     <td className="px-6 py-4 text-right flex items-center justify-end gap-1">
                       {/* এডিট বাটন উইজেট */}
-                      <EditOwnAsset
-                        item={item}
-                      />
+                      <EditOwnAsset item={item} />
 
                       {/* ডিলিট বাটন উইজেট */}
                       <DeleteOwnAsset

@@ -28,6 +28,9 @@ export async function GET() {
       name: item.name || item.title || "Untitled Item",
       price: item.price ? Number(item.price) : 0,
       category: item.category || "General",
+      shortDescription: item.shortDescription || "",
+      fullDescription: item.fullDescription || "",
+      imageUrl: item.imageUrl || "",
       createdAt: item.createdAt || new Date().toISOString(),
     }));
 
@@ -96,7 +99,14 @@ export async function PUT(request: Request) {
     }
 
     const body = await request.json();
-    const { name, price, category } = body;
+    const {
+      name,
+      price,
+      category,
+      shortDescription,
+      fullDescription,
+      imageUrl,
+    } = body;
 
     const client = await clientPromise;
     const db = client.db();
@@ -107,6 +117,9 @@ export async function PUT(request: Request) {
       title: name,
       price: price ? Number(price) : 0,
       category: category || "General",
+      shortDescription: shortDescription || "",
+      fullDescription: fullDescription || "",
+      imageUrl: imageUrl || "",
       updatedAt: new Date().toISOString(),
     };
 

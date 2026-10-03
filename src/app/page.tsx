@@ -39,7 +39,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-zinc-800 selection:text-zinc-100 font-sans space-y-20">
+    <div className="min-h-screen bg-slate-950 text-zinc-100 selection:bg-zinc-800 selection:text-zinc-100 font-sans space-y-20 py-10">
       {/* SECTION 1: HERO SECTION (Limited to 65% height for visual flow) */}
       <header className="relative h-[65vh] py-20 flex items-center justify-center   bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-zinc-950 to-zinc-950">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-25" />

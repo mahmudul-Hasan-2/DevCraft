@@ -55,7 +55,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-zinc-950 text-white sticky top-0 z-50 shadow-md border-b border-zinc-800 font-sans">
+    <nav className="bg-slate-950 text-white sticky top-0 z-50 shadow-md border-b border-zinc-800 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* 1. Brand Logo */}

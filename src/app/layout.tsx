@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fira_Code, Inter } from "next/font/google";
+import { Fira_Code } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/Components/global/Navbar";
 import Footer from "@/Components/global/Footer";
@@ -24,10 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${FiraCode.className} bg-slate-50  text-primary min-h-screen flex flex-col`}
+        className={`${FiraCode.className} bg-slate-50 text-primary min-h-screen flex flex-col`}
       >
         <Navbar />
-        <main className="flex-grow py-20">{children}</main>
+        <main className="flex-grow ">{children}</main>
         <Footer></Footer>
         <Toaster theme="dark" closeButton></Toaster>
       </body>
